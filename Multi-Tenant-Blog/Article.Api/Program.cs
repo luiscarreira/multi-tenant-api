@@ -9,7 +9,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-EntityFrameworkConfiguration.ConfigureDefaultEFCoreContext(builder.Services, builder.Configuration);
 IocContainerConfiguration.ConfigureService(builder.Services, builder.Configuration, builder.Environment);
 
 var app = builder.Build();
