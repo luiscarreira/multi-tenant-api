@@ -1,4 +1,7 @@
-﻿namespace Article.Api.Domain.Models
+﻿using HotChocolate.Types;
+using HotChocolate;
+
+namespace Article.Api.Domain.Models
 {
     public class BlogArticleComment
     {
@@ -17,11 +20,19 @@
         }
 
         public Guid Id { get; set; }
+
+        [GraphQLType(typeof(NonNullType<StringType>))]
         public string Author { get; set; }
+
+        [GraphQLType(typeof(NonNullType<StringType>))]
         public string Content { get; set; }
+
+        [GraphQLType(typeof(NonNullType<DateTimeType>))]
         public DateTimeOffset Created { get; set; }
 
+        [GraphQLNonNullType]
         public Guid BlogArticleId { get; set; }
+
         public BlogArticle BlogArticle { get; set; }
     }
 }

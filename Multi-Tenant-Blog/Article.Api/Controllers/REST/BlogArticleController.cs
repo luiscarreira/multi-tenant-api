@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Article.Api.Controllers
+namespace Article.Api.Controllers.REST
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,11 +25,11 @@ namespace Article.Api.Controllers
             return articles;
         }
 
-        // GET api/<ArticleController>/5
+        // GET api/<ArticleController>/00000000-0000-0000-0000-000000000000
         [HttpGet("{id}")]
-        public string Get(int id)
+        public BlogArticle Get(Guid id)
         {
-            throw new NotImplementedException();
+            return articleService.GetById(id);
         }
 
         // POST api/<ArticleController>
@@ -39,18 +39,18 @@ namespace Article.Api.Controllers
             articleService.CreateArticle(value.Title, value.Content, value.Author);
         }
 
-        // PUT api/<ArticleController>/5
+        // PUT api/<ArticleController>/00000000-0000-0000-0000-000000000000
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(Guid id, [FromBody] BlogArticle value)
         {
-            throw new NotImplementedException();
+            articleService.UpdateArticle(id, value.Title, value.Content, value.Author);
         }
 
-        // DELETE api/<ArticleController>/5
+        // DELETE api/<ArticleController>/00000000-0000-0000-0000-000000000000
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            articleService.DeleteArticle(id);
         }
     }
 }

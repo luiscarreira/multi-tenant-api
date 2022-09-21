@@ -16,6 +16,26 @@ namespace Article.Api.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public IReadOnlyList<BlogArticle> GetAll()
+        {
+            return articleRepository.GetAll().ToList();
+        }
+
+        public IQueryable<BlogArticle> GetAllQueryable()
+        {
+            return articleRepository.GetAll();
+        }
+
+        public IReadOnlyList<BlogArticle> GetAllPaginated(int page, int pageSize)
+        {
+            return articleRepository.GetAll(page, pageSize).ToList();
+        }
+
+        public BlogArticle GetById(Guid id)
+        {
+            return articleRepository.Get(id);
+        }
+
         public BlogArticle CreateArticle(string title, string content, string author)
         {
             var article = new BlogArticle(title, content, author);
@@ -24,10 +44,27 @@ namespace Article.Api.Business.Services
 
             return article;
         }
-
-        public IReadOnlyList<BlogArticle> GetAllPaginated(int page, int pageSize)
+        
+        public BlogArticle UpdateArticle(Guid id, string title, string content, string author)
         {
-            return articleRepository.GetAll(page, pageSize).ToList();
+            var article = articleRepository.Get(id);
+
+            article.Title = title;
+            article.Author = author;
+            article.Content = content;
+            article.UpdatedDate = DateTimeOffset.UtcNow;
+
+            var updatedArticle = articleRepository.Update(article);
+            unitOfWork.Commit();
+
+            return updatedArticle;
+        }
+
+        public void DeleteArticle(Guid id)
+        {
+            var article = articleRepository.Get(id);
+            articleRepository.Delete(article);
+            unitOfWork.Commit();
         }
     }
 }
