@@ -37,9 +37,9 @@ namespace Article.Api.Infrastructure.EFCore.Context
                 .HasKey(article => new { article.Id });
 
             modelBuilder.Entity<BlogArticleComment>()
-                .HasOne(c => c.BlogArticle)
-                .WithMany(a => a.Comments)
-                .HasForeignKey(c => c.BlogArticleId);
+                .HasOne(typeof(BlogArticle))
+                .WithMany()
+                .HasForeignKey("BlogArticleId");
 
 
             // Call Data seeder

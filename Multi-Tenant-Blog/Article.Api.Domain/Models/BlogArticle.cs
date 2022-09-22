@@ -38,7 +38,7 @@ namespace Article.Api.Domain.Models
         [GraphQLType(typeof(DateTimeType))]
         public DateTimeOffset? UpdatedDate { get; set; }
 
-        [GraphQLIgnore]
-        public List<BlogArticleComment> Comments { get; } = new();
+        //[GraphQLIgnore]
+        //public List<BlogArticleComment> Comments { get; } = new();
     }
 }

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GraphQL\**" />
+    <Content Remove="GraphQL\**" />
+    <EmbeddedResource Remove="GraphQL\**" />
+    <None Remove="GraphQL\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.14.0" />
     <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.5" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.11" />
@@ -20,6 +27,7 @@
     <ProjectReference Include="..\Api.Common\Api.Common.csproj" />
     <ProjectReference Include="..\Article.Api.Business\Article.Api.Business.csproj" />
     <ProjectReference Include="..\Article.Api.Domain\Article.Api.Domain.csproj" />
+    <ProjectReference Include="..\Article.Api.GraphQL\Article.Api.GraphQL.csproj" />
     <ProjectReference Include="..\Article.Api.Infrastructure.EFCore\Article.Api.Infrastructure.EFCore.csproj" />
     <ProjectReference Include="..\Domain.Common\Domain.Common.csproj" />
     <ProjectReference Include="..\Infrastructure.EFCore.Common\Infrastructure.EFCore.Common.csproj" />

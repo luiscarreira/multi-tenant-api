@@ -33,6 +33,6 @@ namespace Article.Api.Domain.Models
         [GraphQLNonNullType]
         public Guid BlogArticleId { get; set; }
 
-        public BlogArticle BlogArticle { get; set; }
+        //public BlogArticle BlogArticle { get; set; }
     }
 }
