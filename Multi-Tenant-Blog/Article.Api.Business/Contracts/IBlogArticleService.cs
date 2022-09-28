@@ -1,21 +1,20 @@
-﻿using Article.Api.Domain.Models;
+﻿using Article.Api.Business.DataTransferObjects;
+using Article.Api.Domain.Models;
 
 namespace Article.Api.Business.Contracts
 {
     public interface IBlogArticleService
     {
-        public IReadOnlyList<BlogArticle> GetAll();
+        public IReadOnlyList<BlogArticleDto> GetAll();
 
-        public IReadOnlyList<BlogArticle> GetAllPaginated(int page, int pageSize);
+        public (IReadOnlyList<BlogArticleDto>, int) GetAllPaginated(int page, int pageSize);
 
-        public BlogArticle GetById(Guid id);
+        public BlogArticleDto GetById(Guid id);
 
-        public BlogArticle CreateArticle(string title, string content, string author);
+        public BlogArticleDto CreateArticle(string title, string content, string author);
 
-        public BlogArticle UpdateArticle(Guid id, string title, string content, string author);
+        public BlogArticleDto UpdateArticle(Guid id, string title, string content, string author);
 
-        public void DeleteArticle(Guid id);
-
-        public IQueryable<BlogArticle> GetAllQueryable();
+        public void DeleteArticle(Guid id);        
     }
 }

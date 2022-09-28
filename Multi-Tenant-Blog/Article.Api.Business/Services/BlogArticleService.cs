@@ -1,4 +1,6 @@
 ﻿using Article.Api.Business.Contracts;
+using Article.Api.Business.DataTransferObjects;
+using Article.Api.Business.DataTransferObjects.Helpers;
 using Article.Api.Domain.Models;
 using Article.Api.Domain.Repositories;
 using Business.Common.Contracts;
@@ -7,8 +9,8 @@ namespace Article.Api.Business.Services
 {
     public class BlogArticleService : IBlogArticleService
     {
-        private IArticleRepository articleRepository;
-        private IUnitOfWork unitOfWork;
+        protected IArticleRepository articleRepository;
+        protected IUnitOfWork unitOfWork;
 
         public BlogArticleService(IArticleRepository articleRepository, IUnitOfWork unitOfWork)
         {
@@ -16,36 +18,31 @@ namespace Article.Api.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public IReadOnlyList<BlogArticle> GetAll()
+        public IReadOnlyList<BlogArticleDto> GetAll()
         {
-            return articleRepository.GetAll().ToList();
+            return articleRepository.GetAll().ToDto().ToList();
         }
 
-        public IQueryable<BlogArticle> GetAllQueryable()
+        public (IReadOnlyList<BlogArticleDto>, int) GetAllPaginated(int page, int pageSize)
         {
-            return articleRepository.GetAll();
+             return (articleRepository.GetAll(page, pageSize).ToDto().ToList(), articleRepository.GetAll().Count());
         }
 
-        public IReadOnlyList<BlogArticle> GetAllPaginated(int page, int pageSize)
+        public BlogArticleDto GetById(Guid id)
         {
-            return articleRepository.GetAll(page, pageSize).ToList();
+            return articleRepository.Get(id).ToDto();
         }
 
-        public BlogArticle GetById(Guid id)
-        {
-            return articleRepository.Get(id);
-        }
-
-        public BlogArticle CreateArticle(string title, string content, string author)
+        public BlogArticleDto CreateArticle(string title, string content, string author)
         {
             var article = new BlogArticle(title, content, author);
             article = articleRepository.Add(article);
             unitOfWork.Commit();
 
-            return article;
+            return article.ToDto();
         }
         
-        public BlogArticle UpdateArticle(Guid id, string title, string content, string author)
+        public BlogArticleDto UpdateArticle(Guid id, string title, string content, string author)
         {
             var article = articleRepository.Get(id);
 
@@ -57,7 +54,7 @@ namespace Article.Api.Business.Services
             var updatedArticle = articleRepository.Update(article);
             unitOfWork.Commit();
 
-            return updatedArticle;
+            return updatedArticle.ToDto();
         }
 
         public void DeleteArticle(Guid id)

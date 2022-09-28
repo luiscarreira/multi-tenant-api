@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HotChocolate.Abstractions" Version="12.14.0" />
+    <PackageReference Include="HotChocolate.Types" Version="12.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Article.Api.Domain\Article.Api.Domain.csproj" />
     <ProjectReference Include="..\Business.Common\Business.Common.csproj" />
   </ItemGroup>

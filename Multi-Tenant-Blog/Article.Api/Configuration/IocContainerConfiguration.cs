@@ -1,5 +1,7 @@
 ﻿using Article.Api.Business.Contracts;
+using Article.Api.Business.Contracts.OData;
 using Article.Api.Business.Services;
+using Article.Api.Business.Services.OData;
 using Article.Api.Domain.Repositories;
 using Article.Api.Infrastructure.EFCore.Context;
 using Article.Api.Infrastructure.EFCore.Repositories;
@@ -28,6 +30,10 @@ namespace Article.Api.Configuration
             services.AddTransient<ICommentRepository, CommentRepository>();
 
             services.AddTransient<IBlogArticleService, BlogArticleService>();
+            services.AddTransient<IBlogArticleODataService, BlogArticleODataService>();
+
+            services.AddTransient<IBlogArticleCommentService, BlogArticleCommentService>();
+            services.AddTransient<IBlogArticleCommentODataService, BlogArticleCommentODataService>();
 
             services.AddScoped<IContextFactory<BlogArticleContext>>(x =>
             {

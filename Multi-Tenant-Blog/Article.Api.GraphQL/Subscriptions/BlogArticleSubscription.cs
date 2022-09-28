@@ -1,4 +1,5 @@
-﻿using Article.Api.Domain.Models;
+﻿using Article.Api.Business.DataTransferObjects;
+using Article.Api.Domain.Models;
 using HotChocolate.Execution;
 using HotChocolate.Subscriptions;
 
@@ -6,39 +7,47 @@ namespace Article.Api.GraphQL.Subscriptions
 {
     public class BlogArticleSubscription
     {
-        [SubscribeAndResolve]
-        public async ValueTask<ISourceStream<BlogArticle>> OnAuthorCreated([Service] ITopicEventReceiver eventReceiver, CancellationToken cancellationToken)
+        ITopicEventReceiver eventReceiver;
+
+        public BlogArticleSubscription(ITopicEventReceiver eventReceiver)
         {
-            return await eventReceiver.SubscribeAsync<string, BlogArticle>("BlogArticleCreated", cancellationToken);
+            this.eventReceiver = eventReceiver;
         }
 
         [SubscribeAndResolve]
-        public async ValueTask<ISourceStream<List<BlogArticle>>> OnAuthorsGet([Service] ITopicEventReceiver eventReceiver, CancellationToken cancellationToken)
+        public async ValueTask<ISourceStream<BlogArticleDto>> OnBlogArticleCreated(CancellationToken cancellationToken)
         {
-            return await eventReceiver.SubscribeAsync<string, List<BlogArticle>>("ReturnedBlogArticle", cancellationToken);
+            return await eventReceiver.SubscribeAsync<string, BlogArticleDto>("BlogArticleCreated", cancellationToken);
         }
 
         [SubscribeAndResolve]
-        public async ValueTask<ISourceStream<BlogArticle>> OnAuthorGet([Service] ITopicEventReceiver eventReceiver, CancellationToken cancellationToken)
+        public async ValueTask<ISourceStream<List<BlogArticleDto>>> OnBlogArticlesGet(CancellationToken cancellationToken)
         {
-            return await eventReceiver.SubscribeAsync<string, BlogArticle>("ReturnedBlogArticle", cancellationToken);
+            return await eventReceiver.SubscribeAsync<string, List<BlogArticleDto>>("ReturnedBlogArticle", cancellationToken);
         }
 
-        //[SubscribeAndResolve]
-        //public async ValueTask<ISourceStream<BlogPost>>
-        //OnBlogPostsGet([Service] ITopicEventReceiver
-        //eventReceiver, CancellationToken cancellationToken)
-        //{
-        //    return await eventReceiver.SubscribeAsync<string,
-        //    BlogPost>("ReturnedBlogPosts", cancellationToken);
-        //}
-        //[SubscribeAndResolve]
-        //public async ValueTask<ISourceStream<BlogPost>>
-        //OnBlogPostGet([Service] ITopicEventReceiver
-        //eventReceiver, CancellationToken cancellationToken)
-        //{
-        //    return await eventReceiver.SubscribeAsync<string,
-        //    BlogPost>("ReturnedBlogPost", cancellationToken);
-        //}
+        [SubscribeAndResolve]
+        public async ValueTask<ISourceStream<BlogArticleDto>> OnBlogArticleGet(CancellationToken cancellationToken)
+        {
+            return await eventReceiver.SubscribeAsync<string, BlogArticleDto>("ReturnedBlogArticle", cancellationToken);
+        }
+
+        #region Blog Article Comment
+
+        [SubscribeAndResolve]
+        public async ValueTask<ISourceStream<BlogArticleCommentDto>> OnBlogArticleCommentCreated(CancellationToken cancellationToken)
+        {
+            return await eventReceiver.SubscribeAsync<string, BlogArticleCommentDto>("BlogArticleCommentCreated", cancellationToken);
+        }
+
+        [SubscribeAndResolve]
+        public async ValueTask<ISourceStream<List<BlogArticleDto>>> OnBlogArticleCommentsGet(CancellationToken cancellationToken)
+        {
+            return await eventReceiver.SubscribeAsync<string, List<BlogArticleDto>>("ReturnedBlogArticleComments", cancellationToken);
+        }
+
+        
+
+        #endregion
     }
 }

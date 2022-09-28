@@ -1,20 +1,13 @@
-﻿using Article.Api.Domain.Models;
-using Article.Api.Domain.Repositories;
+﻿using Article.Api.Business.Contracts;
+using Article.Api.Business.DataTransferObjects;
 
 namespace Article.Api.GraphQL.Resolvers
 {
     public class BlogArticleResolver
     {
-        private readonly IArticleRepository _blogArticleRepository;
-
-        public BlogArticleResolver([Service] IArticleRepository blogArticleRepository)
+        public BlogArticleDto? GetBlogArticle([Service] IBlogArticleService blogArticleService, [Parent] BlogArticleCommentDto articleComment)
         {
-            _blogArticleRepository = blogArticleRepository;
-        }
-
-        public BlogArticle GetBlogArticle([Parent] BlogArticleComment articleComment)
-        {
-            return _blogArticleRepository.Get(articleComment.BlogArticleId);
+            return articleComment.BlogArticleId.HasValue ? blogArticleService.GetById(articleComment.BlogArticleId.Value) : default;
         }
     }
 }

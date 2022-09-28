@@ -1,45 +1,38 @@
-﻿using Article.Api.Domain.Models;
-using Article.Api.Domain.Repositories;
+﻿using Article.Api.Business.Contracts;
+using Article.Api.Business.DataTransferObjects;
+using Article.Api.Domain.Models;
 using HotChocolate.Subscriptions;
 
 namespace Article.Api.GraphQL.Query
 {
     public class BlogArticleQuery
     {
-        public async Task<List<BlogArticle>> GetAllBlogArticles([Service] IArticleRepository blogArticleRepository, [Service] ITopicEventSender eventSender)
+        private const int PageSize = 25;
+        private const int Page = 1;
+
+        public async Task<ResponseWrapper<IReadOnlyList<BlogArticleDto>>> GetAllBlogArticles([Service] IBlogArticleService blogArticleService, [Service] ITopicEventSender eventSender, int? page, int? pageSize)
         {
-            List<BlogArticle> articles = blogArticleRepository.GetAll().ToList();
+            var articles = blogArticleService.GetAllPaginated(page ?? Page, pageSize ?? PageSize);
             await eventSender.SendAsync("ReturnedBlogArticles", articles);
-            return articles;
+            return new ResponseWrapper<IReadOnlyList<BlogArticleDto>>(articles.Item1, articles.Item2);
         }
 
-        public async Task<BlogArticle> GetBlogArticleById([Service] IArticleRepository blogArticleRepository, [Service] ITopicEventSender eventSender, Guid id)
+        public async Task<BlogArticleDto> GetBlogArticleById([Service] IBlogArticleService blogArticleService, [Service] ITopicEventSender eventSender, Guid id)
         {
-            BlogArticle article = blogArticleRepository.Get(id);
+            var article = blogArticleService.GetById(id);
             await eventSender.SendAsync("ReturnedBlogArticle", article);
             return article;
         }
 
-        //public async Task<List<BlogPost>>
-        //GetAllBlogPosts([Service] IBlogPostRepository
-        //blogPostRepository,
-        //[Service] ITopicEventSender eventSender)
-        //{
-        //    List<BlogPost> blogPosts =
-        //    blogPostRepository.GetBlogPosts();
-        //    await eventSender.SendAsync("ReturnedBlogPosts",
-        //    blogPosts);
-        //    return blogPosts;
-        //}
-        //public async Task<BlogPost> GetBlogPostById([Service]
-        //IBlogPostRepository blogPostRepository,
-        //[Service] ITopicEventSender eventSender, int id)
-        //{
-        //    BlogPost blogPost =
-        //    blogPostRepository.GetBlogPostById(id);
-        //    await eventSender.SendAsync("ReturnedBlogPost",
-        //    blogPost);
-        //    return blogPost;
-        //}
+        #region Blog Article Comments
+
+        public async Task<IReadOnlyList<BlogArticleCommentDto>> GetAllBlogArticleComments([Service] IBlogArticleCommentService blogArticleCommentService, [Service] ITopicEventSender eventSender, Guid articleId)
+        {
+            var comments = blogArticleCommentService.GetAll(articleId);
+            await eventSender.SendAsync("ReturnedBlogArticleComments", comments);
+            return comments;
+        }
+
+        #endregion
     }
 }
